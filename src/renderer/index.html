@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' blob: data:; font-src 'self'"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>Robin</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 9V3h12v6" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M12 11v6" /><path d="m9 14 3 3 3-3" /></symbol>
+      <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4 8.1 15.9" /><path d="M14.5 14.5 20 20" /><path d="M8.1 8.1 12 12" /></symbol>
+      <symbol id="i-template" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 2.4" /><rect x="7" y="7" width="10" height="10" rx="1" /></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-5-5L5 21" /></symbol>
+    </svg>
+
+    <div class="app" id="app">
+      <header class="bar">
+        <h1 class="brand"><img class="brand-icon" src="icon.svg" alt="" width="36" height="36" />Robin</h1>
+        <div class="bar-actions">
+          <button type="button" class="btn" id="template" title="A blank artboard for making your own design in Canva, Inkscape and similar">
+            <svg class="icon" aria-hidden="true"><use href="#i-template" /></svg>Design template
+          </button>
+          <button type="button" class="btn" id="cricut" title="One picture of this design, for Print Then Cut">
+            <svg class="icon" aria-hidden="true"><use href="#i-scissors" /></svg>Export for Cricut
+          </button>
+          <button type="button" class="btn" id="save" title="Ctrl+S">
+            <svg class="icon" aria-hidden="true"><use href="#i-save" /></svg>Save PDF
+          </button>
+          <button type="button" class="btn btn-primary" id="print" title="Ctrl+P">
+            <svg class="icon" aria-hidden="true"><use href="#i-printer" /></svg>Print
+          </button>
+        </div>
+      </header>
+
+      <aside class="side" aria-label="Design">
+        <div class="hero-preview">
+          <img id="design-img" alt="Preview of your design" />
+        </div>
+
+        <section class="group" aria-labelledby="g-size">
+          <h2 class="group-title" id="g-size">Shape and size</h2>
+          <label class="row">
+            <span class="row-label">Size</span>
+            <select id="size"></select>
+          </label>
+          <div class="row" role="radiogroup" aria-label="Corners" id="corners-row">
+            <span class="row-label">Corners</span>
+            <div class="seg">
+              <label><input type="radio" name="corners" value="sharp" checked /><span>Square</span></label>
+              <label><input type="radio" name="corners" value="round" /><span>Rounded</span></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="group" aria-labelledby="g-design">
+          <h2 class="group-title" id="g-design">Start from a design</h2>
+          <div class="gallery" id="gallery" role="radiogroup" aria-labelledby="g-design"></div>
+        </section>
+
+        <section class="group" aria-labelledby="g-words">
+          <h2 class="group-title" id="g-words">Words</h2>
+          <label class="stack">
+            <span class="row-label">Big line</span>
+            <input type="text" id="headline" maxlength="80" />
+          </label>
+          <label class="stack">
+            <span class="row-label">Small line</span>
+            <input type="text" id="subline" maxlength="80" />
+          </label>
+          <label class="stack">
+            <span class="row-label">Shop name (optional)</span>
+            <input type="text" id="shop" maxlength="80" placeholder="Your shop or @handle" />
+          </label>
+          <label class="row">
+            <span class="row-label">Big line font</span>
+            <select id="font"></select>
+          </label>
+        </section>
+
+        <section class="group" aria-labelledby="g-look">
+          <h2 class="group-title" id="g-look">Look</h2>
+          <div class="swatches">
+            <label class="swatch"><input type="color" id="bg" /><span>Background</span></label>
+            <label class="swatch"><input type="color" id="ink" /><span>Words</span></label>
+            <label class="swatch"><input type="color" id="accent" /><span>Trim</span></label>
+          </div>
+          <label class="row">
+            <span class="row-label">Border</span>
+            <select id="border"></select>
+          </label>
+          <label class="row">
+            <span class="row-label">Decoration</span>
+            <select id="motif"></select>
+          </label>
+        </section>
+
+        <section class="group" aria-labelledby="g-art">
+          <h2 class="group-title" id="g-art">Your art</h2>
+          <p class="hint" id="art-hint">Add a logo or a finished design (PNG, JPG, WebP or SVG). You can also drop a picture anywhere in the window.</p>
+          <div class="art-row">
+            <button type="button" class="btn" id="art-pick"><svg class="icon" aria-hidden="true"><use href="#i-image" /></svg>Add picture…</button>
+            <button type="button" class="link-btn" id="art-remove" hidden>Remove</button>
+          </div>
+          <input type="file" id="art-file" class="visually-hidden" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg" tabindex="-1" />
+          <div class="seg" id="art-layout" role="radiogroup" aria-label="Picture placement" hidden>
+            <label><input type="radio" name="art-layout" value="top" checked /><span>Above the words</span></label>
+            <label><input type="radio" name="art-layout" value="fill" /><span>Fill the whole sticker</span></label>
+          </div>
+        </section>
+      </aside>
+
+      <main class="preview" aria-label="Sheet preview">
+        <div class="sheet-bar">
+          <label class="row">
+            <span class="row-label">Print on</span>
+            <select id="mode">
+              <option value="plain">Plain paper, cardstock or full-sheet sticker paper</option>
+              <option value="precut">Pre-cut sticker sheet</option>
+            </select>
+          </label>
+          <label class="row">
+            <span class="row-label">Paper</span>
+            <select id="paper"></select>
+          </label>
+          <label class="row">
+            <span class="row-label">Sheets</span>
+            <input type="number" id="sheets" min="1" max="100" step="1" value="1" class="num" />
+          </label>
+          <label class="check" id="marks-wrap"><input type="checkbox" id="marks" checked /> Crop marks</label>
+          <label class="check"><input type="checkbox" id="outline" /> Cut outline</label>
+        </div>
+
+        <details class="measure" id="grid-box">
+          <summary>Sheet measurements</summary>
+          <p class="hint">Match these to your sticker sheet's template (usually printed on the pack or the maker's website). Measure from the paper's edges, in inches.</p>
+          <div class="grid-fields">
+            <label class="stack"><span class="row-label">Across</span><input type="number" id="g-cols" min="1" max="20" step="1" class="num" /></label>
+            <label class="stack"><span class="row-label">Down</span><input type="number" id="g-rows" min="1" max="30" step="1" class="num" /></label>
+            <label class="stack"><span class="row-label">Left margin</span><input type="number" id="g-left" min="0" max="12" step="0.01" class="num" /></label>
+            <label class="stack"><span class="row-label">Top margin</span><input type="number" id="g-top" min="0" max="12" step="0.01" class="num" /></label>
+            <label class="stack"><span class="row-label">Space across</span><input type="number" id="g-hgap" min="0" max="6" step="0.01" class="num" /></label>
+            <label class="stack"><span class="row-label">Space down</span><input type="number" id="g-vgap" min="0" max="6" step="0.01" class="num" /></label>
+          </div>
+          <button type="button" class="link-btn" id="g-reset">Reset to a centred layout</button>
+        </details>
+
+        <details class="measure">
+          <summary>Printer adjustment</summary>
+          <p class="hint">If everything prints a little off, move it here. Print one test sheet on plain paper and hold it up to the light against your sticker sheet.</p>
+          <div class="grid-fields">
+            <label class="stack"><span class="row-label">Move right (in)</span><input type="number" id="nudge-x" min="-1" max="1" step="0.01" value="0" class="num" /></label>
+            <label class="stack"><span class="row-label">Move down (in)</span><input type="number" id="nudge-y" min="-1" max="1" step="0.01" value="0" class="num" /></label>
+          </div>
+        </details>
+
+        <p class="summary" id="summary"></p>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="sheets" id="sheet-view"></div>
+      </main>
+    </div>
+
+    <div class="drag-veil" id="veil" hidden><p>Drop to add your picture</p></div>
+    <div class="print-root" id="print-root" aria-hidden="true"></div>
+  </body>
+</html>
