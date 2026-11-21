@@ -1,14 +1,17 @@
-// The only two things the window can ask the main process to do: save a file
-// it made (PDF, Cricut PNG or SVG template), and print the sheets. Every
-// payload is checked here before use.
-import { BrowserWindow, app, dialog, ipcMain } from "electron";
+// The only things the window can ask the main process to do: save a file it
+// made (PDF, Cricut PNG or SVG template), print the sheets, and open a
+// feedback email. Every payload is checked here before use.
+import { BrowserWindow, app, dialog, ipcMain, shell } from "electron";
 import fs from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
+import { checkFeedbackPayload, feedbackMailto } from "./feedback.js";
 import { FILE_KINDS, PRINT_SIZES, checkPrintPayload, checkSavePayload } from "./validate.js";
 
 export const CHANNELS = {
   saveFile: "robin:save-file",
   print: "robin:print",
+  feedback: "robin:feedback",
 };
 
 /**
@@ -43,6 +46,13 @@ export function registerIpc() {
     if (r.canceled || !r.filePath) return { saved: false };
     await fs.writeFile(r.filePath, bytes);
     return { saved: true, path: r.filePath };
+  });
+
+  handle(CHANNELS.feedback, async (_e, p) => {
+    const { kind } = checkFeedbackPayload(p);
+    const info = { appName: "Robin", version: app.getVersion(), os: `Windows ${os.release()} (${process.arch}), Electron ${process.versions.electron}` };
+    await shell.openExternal(feedbackMailto(kind, info));
+    return { opened: true };
   });
 
   handle(CHANNELS.print, async (e, p) => {

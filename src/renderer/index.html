@@ -24,6 +24,11 @@
       <header class="bar">
         <h1 class="brand"><img class="brand-icon" src="icon.svg" alt="" width="36" height="36" />Robin</h1>
         <div class="bar-actions">
+          <button type="button" class="link-btn feedback-btn" popovertarget="feedback-menu">Feedback</button>
+          <div class="menu" id="feedback-menu" popover>
+            <button type="button" class="menu-item" data-feedback="bug">Report a problem</button>
+            <button type="button" class="menu-item" data-feedback="feedback">Send feedback</button>
+          </div>
           <button type="button" class="btn" id="template" title="A blank artboard for making your own design in Canva, Inkscape and similar">
             <svg class="icon" aria-hidden="true"><use href="#i-template" /></svg>Design template
           </button>

@@ -101,6 +101,11 @@ function smokeTest(win, outFile, art) {
         }
       }
       fs.writeFileSync(outFile, (await win.webContents.capturePage()).toPNG());
+      // The feedback menu opens under its button.
+      await js(`document.getElementById("feedback-menu").showPopover()`);
+      await new Promise((r) => setTimeout(r, 200));
+      fs.writeFileSync(out("-feedback.png"), (await win.webContents.capturePage()).toPNG());
+      await js(`document.getElementById("feedback-menu").hidePopover()`);
     } catch (err) {
       problems.push(`smoke crashed: ${err instanceof Error ? err.message : err}`);
     }
